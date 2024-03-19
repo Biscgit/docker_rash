@@ -19,7 +19,7 @@ fn set_background(frame: &mut Frame) -> Rect {
     let area = frame.size();
     let background = Block::default()
         .borders(Borders::NONE)
-        .style(Style::new().bg(Color::Rgb(32, 32, 36)));
+        .style(Style::new().bg(Color::Rgb(32, 32, 38)));
 
     frame.render_widget(&background, area);
     background.inner(area)
