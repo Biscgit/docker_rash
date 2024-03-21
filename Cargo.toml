@@ -5,8 +5,7 @@ authors = ["horvatda"]
 edition = "2021"
 
 [dependencies]
-crossterm = { version = "0.27.0", features = ["event-stream"] }
+crossterm = { version = "0.27", features = ["event-stream"] }
 futures = "0.3.30"
-ratatui = "0.26.1"
-tokio = { version = "1.36.0", features = ["full"] }
-time = "0.3.34"
+ratatui = "0.26"
+tokio = { version = "1.36", features = ["full"] }
