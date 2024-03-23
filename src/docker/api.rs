@@ -25,8 +25,8 @@ impl DockerAPI<'_> {
 
         let data: SResult<Vec<models::ContainerEntry>> = serde_json::from_str(&data);
         match data {
-            Ok(d) => { d.unwrap() }
-            Err(e) => { panic!(e) }
+            Ok(d) => { d }
+            Err(e) => { panic!("{}", e) }
         }
     }
 }
