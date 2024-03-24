@@ -65,13 +65,20 @@ impl<'a> CurlBuilder<'a> {
         }
     }
 
-             self.command_args.push("-X");
-             self.command_args.push("POST");
-             self.command_args.push(api_endpoint);
-             return Ok(self);
-         }
-         Err("Endpoint already set!".into())
-     }
+    pub fn json_payload(&mut self, payload: &'a str) -> EResult<&mut Self> {
+        match self.payload_args {
+            Some(_) => Err("JSON Payload already set!".into()),
+            None => {
+                self.payload_args = Some(vec![
+                    "-H",
+                    "Content-Type: application/json",
+                    "-d",
+                    payload,
+                ]);
+                Ok(self)
+            }
+        }
+    }
 
     pub async fn execute_command(&mut self) -> EResult<String> {
         let mut command = Command::new("curl");
