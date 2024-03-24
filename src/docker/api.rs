@@ -29,8 +29,7 @@ impl DockerAPI<'_> {
 
     pub async fn get_all_containers(&self) -> EResult<Vec<models::ContainerEntry>> {
         let data = CurlBuilder::new(self.socket_path)
-            .http_get("/containers/json")
-            .unwrap()
+            .http_get("/containers/json")?
             .execute_command()
             .await?;
 
