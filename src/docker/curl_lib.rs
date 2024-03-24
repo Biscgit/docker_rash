@@ -1,47 +1,69 @@
+use crate::docker::types::EResult;
 use tokio::process::Command;
-use std::error::Error;
 
 const DEFAULT_API_PATH: &str = "http://localhost/v1.44";
 
-pub fn format_api_endpoint(api_endpoint: &str) -> String {
-    format!(r"{}{}", DEFAULT_API_PATH, api_endpoint)
-}
 
 pub struct CurlBuilder<'a> {
-    command: Command,
-    command_args: Vec<&'a str>,
-
-    endpoint_set: bool,
+    curl_args: Vec<&'a str>,
+    payload_args: Option<Vec<&'a str>>,
+    endpoint_args: Option<Vec<String>>,
 }
 
 impl<'a> CurlBuilder<'a> {
     pub fn new(socket_path: &'a str) -> CurlBuilder<'a> {
         CurlBuilder {
-            command: Command::new("curl"),
-            command_args: vec![
+            curl_args: vec![
                 "-s",
                 "--unix-socket",
                 socket_path,
             ],
-            endpoint_set: false,
+            payload_args: None,
+            endpoint_args: None,
         }
     }
 
-    pub fn http_get(&mut self, api_endpoint: &'a str) -> Result<&mut Self, Box<dyn Error>> {
-        if !self.endpoint_set {
-            self.endpoint_set = true;
-
-            self.command_args.push("-X");
-            self.command_args.push("GET");
-            self.command_args.push(api_endpoint);
-            return Ok(self);
+    pub fn http_get(&mut self, api_endpoint: &'a str) -> EResult<&mut Self> {
+        match self.endpoint_args {
+            Some(_) => Err("HTTP Endpoint already set!".into()),
+            None => {
+                self.endpoint_args = Some(vec![
+                    "-X".to_string(),
+                    "GET".to_string(),
+                    format!(r"{}{}", DEFAULT_API_PATH, api_endpoint),
+                ]);
+                Ok(self)
+            }
         }
-        Err("Endpoint already set!".into())
     }
 
-     pub fn http_post(&mut self, api_endpoint: &'a str) -> Result<&mut Self, Box<dyn Error>> {
-         if !self.endpoint_set {
-             self.endpoint_set = true;
+    pub fn http_post(&mut self, api_endpoint: &'a str) -> EResult<&mut Self> {
+        match self.endpoint_args {
+            Some(_) => Err("HTTP Endpoint already set!".into()),
+            None => {
+                self.endpoint_args = Some(vec![
+                    "-X".to_string(),
+                    "POST".to_string(),
+                    format!(r"{}{}", DEFAULT_API_PATH, api_endpoint),
+                ]);
+                Ok(self)
+            }
+        }
+    }
+
+    pub fn http_delete(&mut self, api_endpoint: &'a str) -> EResult<&mut Self> {
+        match self.endpoint_args {
+            Some(_) => Err("HTTP Endpoint already set!".into()),
+            None => {
+                self.endpoint_args = Some(vec![
+                    "-X".to_string(),
+                    "DELETE".to_string(),
+                    format!(r"{}{}", DEFAULT_API_PATH, api_endpoint),
+                ]);
+                Ok(self)
+            }
+        }
+    }
 
              self.command_args.push("-X");
              self.command_args.push("POST");
@@ -51,15 +73,17 @@ impl<'a> CurlBuilder<'a> {
          Err("Endpoint already set!".into())
      }
 
-    pub async fn execute(&mut self) -> String {
-        let result = self.command
-            .args(&*self.command_args)
+    pub async fn execute_command(&mut self) -> EResult<String> {
+        let mut command = Command::new("curl");
+        let result = command
+            .args(&*self.curl_args)
+            .args(self.payload_args.take().unwrap_or_default())
+            .args(self.endpoint_args.take().unwrap_or_default())
             .output()
-            .await
-            .unwrap()
+            .await?
             .stdout;
 
-        String::from_utf8(result).unwrap()
+        Ok(String::from_utf8(result).unwrap())
 
         // match result.status.success() {
         //     true => { Ok(String::from_utf8(result.stdout)?) }

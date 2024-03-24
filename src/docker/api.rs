@@ -16,16 +16,16 @@ impl Default for DockerAPI<'_> {
 }
 
 impl DockerAPI<'_> {
-    pub async fn get_all_containers(&self) -> Vec<models::ContainerEntry> {
+    pub async fn get_all_containers(&self) -> EResult<Vec<models::ContainerEntry>> {
         let data = CurlBuilder::new(self.socket_path)
-            .http_get(&format_api_endpoint("/containers/json"))
+            .http_get("/containers/json")
             .unwrap()
-            .execute()
-            .await;
+            .execute_command()
+            .await?;
 
         let data: SResult<Vec<models::ContainerEntry>> = serde_json::from_str(&data);
         match data {
-            Ok(d) => { d }
+            Ok(d) => { Ok(d) }
             Err(e) => { panic!("{}", e) }
         }
     }
