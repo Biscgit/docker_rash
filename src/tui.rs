@@ -23,7 +23,7 @@ impl<B: Backend> Tui<B> {
     /// Initializes the terminal interface.
     pub fn init(&mut self) -> AppResult<()> {
         terminal::enable_raw_mode()?;
-        crossterm::execute!(io::stderr(), EnterAlternateScreen, EnableMouseCapture)?;
+        crossterm::execute!(io::stderr(), EnterAlternateScreen)?; // EnableMouseCapture
 
         Self::init_panic_hook()?;
 
@@ -53,7 +53,7 @@ impl<B: Backend> Tui<B> {
     /// Resets the terminal interface.
     fn reset() -> AppResult<()> {
         terminal::disable_raw_mode()?;
-        crossterm::execute!(io::stderr(), LeaveAlternateScreen, DisableMouseCapture)?;
+        crossterm::execute!(io::stderr(), LeaveAlternateScreen)?; // DisableMouseCapture
         Ok(())
     }
 
