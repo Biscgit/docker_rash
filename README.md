@@ -10,4 +10,4 @@ A simple version of docker desktop running only in the terminal written in Rust.
 
 ### Requirements
 - `rust` >=  `1.77.0 (2021 Edition)`
-- `cURL` >= `7.50.0`
+- `curl` >= `7.50.0`
