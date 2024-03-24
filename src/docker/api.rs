@@ -1,5 +1,6 @@
-use crate::docker::curl_lib::{CurlBuilder, format_api_endpoint};
+use crate::docker::curl_lib::CurlBuilder;
 use crate::docker::models;
+use crate::docker::types::EResult;
 
 type SResult<T> = serde_json::Result<T>;
 
