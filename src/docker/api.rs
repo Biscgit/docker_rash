@@ -17,6 +17,16 @@ impl Default for DockerAPI<'_> {
 }
 
 impl DockerAPI<'_> {
+
+    pub async fn test_connection(&self) -> EResult<bool>{
+        let data = CurlBuilder::new(self.socket_path)
+            .http_get("/_ping")?
+            .execute_command()
+            .await?;
+
+        Ok(&data == "OK")
+    }
+
     pub async fn get_all_containers(&self) -> EResult<Vec<models::ContainerEntry>> {
         let data = CurlBuilder::new(self.socket_path)
             .http_get("/containers/json")
