@@ -1,6 +1,6 @@
 # Docker Dashboard
 
-A simple version of docker desktop running only in the terminal written in Rust.
+A minimalistic version of Docker-Desktop for Linux running only in the terminal written in Rust.
 
 ---
 
@@ -18,3 +18,7 @@ Optional dependencies (but **highly recommended**):
 - **Nerdfonts** >= `3.0.0`
 
 Internet is only needed when web access is required, for example <a href=https://hub.docker.com/>DockerHub</a> images.
+
+## Optional ToDos
+- [ ] Replace `curl` with the inbuilt `tokio::net::UnixStream`
+- [ ] Add remote socket + authentication
