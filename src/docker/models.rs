@@ -6,9 +6,11 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct ContainerEntry {
     #[serde(alias="Id")]
-    pub id: String,
+    id: String,
     #[serde(alias="Names")]
     names: Vec<String>,
+    #[serde(alias="Image")]
+    image: String,
     #[serde(alias="Command")]
     command: String,
     #[serde(alias="Created")]
