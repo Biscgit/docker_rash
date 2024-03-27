@@ -24,6 +24,18 @@ pub struct ContainerEntry {
 }
 
 impl ContainerEntry {
+
+    pub fn example() -> Self {
+        ContainerEntry {
+            id: "f3183789dbfb5167379cd0d9c10c8a0b3c1365e648ea1a67a1fdfc8043361b82".to_string(),
+            names: vec!["/stupefied_hellman".to_string()],
+            image: "nginx".to_string(),
+            command: "/docker-entrypoint.sh nginx -g 'daemon off;'".to_string(),
+            created: 1711278459,
+            state: "running".to_string(),
+            status: "Up 1 second".to_string(),
+        }
+    }
     pub fn to_view_vector(&self) -> [&str; 2] {
         let name: &str = match self.names.first() {
             Some(n) => n,
