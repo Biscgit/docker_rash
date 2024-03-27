@@ -62,7 +62,7 @@ impl SideBar {
 
     pub fn previous(&mut self) {
         if let Some(index) = self.current_selected.selected() {
-            if self.current_selected > 0 {
+            if self.list_length > 0 {
                 self.current_selected.select(
                     Some((index - 1).rem_euclid(self.list_length))
                 );
