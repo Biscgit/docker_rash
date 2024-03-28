@@ -1,6 +1,6 @@
 use crate::docker::curl_lib::CurlBuilder;
 use crate::docker::models;
-use crate::docker::types::EResult;
+use crate::types::AppResult;
 
 type SResult<T> = serde_json::Result<T>;
 
@@ -18,7 +18,7 @@ impl Default for DockerAPI<'_> {
 
 impl DockerAPI<'_> {
 
-    pub async fn test_connection(&self) -> EResult<bool>{
+    pub async fn test_connection(&self) -> AppResult<bool>{
         let data = CurlBuilder::new(self.socket_path)
             .http_get("/_ping")?
             .execute_command()
@@ -27,7 +27,7 @@ impl DockerAPI<'_> {
         Ok(&data == "OK")
     }
 
-    pub async fn get_all_containers(&self) -> EResult<Vec<models::ContainerEntry>> {
+    pub async fn get_all_containers(&self) -> AppResult<Vec<models::ContainerEntry>> {
         let data = CurlBuilder::new(self.socket_path)
             .http_get("/containers/json")?
             .execute_command()

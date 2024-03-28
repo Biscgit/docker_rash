@@ -1,12 +1,12 @@
-use crate::app::{App, AppResult};
-use crate::event::EventHandler;
-use crate::ui;
-use crossterm::event::{DisableMouseCapture, EnableMouseCapture};
+// use crossterm::event::{DisableMouseCapture, EnableMouseCapture};
 use crossterm::terminal::{self, EnterAlternateScreen, LeaveAlternateScreen};
+use ratatui::{Frame, Terminal};
+use std::{io, panic};
 use ratatui::backend::Backend;
-use ratatui::Terminal;
-use std::io;
-use std::panic;
+
+use crate::types::AppResult;
+use crate::event::EventHandler;
+
 
 /// Representation of a terminal user interface.
 pub struct Tui<B: Backend> {
@@ -45,8 +45,8 @@ impl<B: Backend> Tui<B> {
     }
 
     /// [`Draw`] the terminal interface by [`rendering`] the widgets.
-    pub fn draw(&mut self, app: &mut App) -> AppResult<()> {
-        self.terminal.draw(|frame| ui::render(app, frame))?;
+    pub fn draw<F: FnMut(&mut Frame)>(&mut self, func: F) -> AppResult<()> {
+        self.terminal.draw(func)?;
         Ok(())
     }
 

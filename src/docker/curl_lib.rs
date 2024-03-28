@@ -1,4 +1,4 @@
-use crate::docker::types::EResult;
+use crate::types::AppResult;
 use tokio::process::Command;
 
 const DEFAULT_API_PATH: &str = "http://localhost/v1.44";
@@ -23,7 +23,7 @@ impl<'a> CurlBuilder<'a> {
         }
     }
 
-    pub fn http_get(&mut self, api_endpoint: &'a str) -> EResult<&mut Self> {
+    pub fn http_get(&mut self, api_endpoint: &'a str) -> AppResult<&mut Self> {
         match self.endpoint_args {
             Some(_) => Err("HTTP Endpoint already set!".into()),
             None => {
@@ -37,7 +37,7 @@ impl<'a> CurlBuilder<'a> {
         }
     }
 
-    pub fn http_post(&mut self, api_endpoint: &'a str) -> EResult<&mut Self> {
+    pub fn http_post(&mut self, api_endpoint: &'a str) -> AppResult<&mut Self> {
         match self.endpoint_args {
             Some(_) => Err("HTTP Endpoint already set!".into()),
             None => {
@@ -51,7 +51,7 @@ impl<'a> CurlBuilder<'a> {
         }
     }
 
-    pub fn http_delete(&mut self, api_endpoint: &'a str) -> EResult<&mut Self> {
+    pub fn http_delete(&mut self, api_endpoint: &'a str) -> AppResult<&mut Self> {
         match self.endpoint_args {
             Some(_) => Err("HTTP Endpoint already set!".into()),
             None => {
@@ -65,7 +65,7 @@ impl<'a> CurlBuilder<'a> {
         }
     }
 
-    pub fn json_payload(&mut self, payload: &'a str) -> EResult<&mut Self> {
+    pub fn json_payload(&mut self, payload: &'a str) -> AppResult<&mut Self> {
         match self.payload_args {
             Some(_) => Err("JSON Payload already set!".into()),
             None => {
@@ -80,7 +80,7 @@ impl<'a> CurlBuilder<'a> {
         }
     }
 
-    pub async fn execute_command(&mut self) -> EResult<String> {
+    pub async fn execute_command(&mut self) -> AppResult<String> {
         let mut command = Command::new("curl");
         let result = command
             .args(&*self.curl_args)

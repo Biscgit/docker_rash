@@ -3,13 +3,18 @@ use std::time::Duration;
 use crossterm::event::{Event as CrosstermEvent, KeyEvent, MouseEvent};
 use futures::{FutureExt, StreamExt};
 use tokio::sync::mpsc;
+use crate::types::AppResult;
 
-use crate::app::AppResult;
 
-/// Terminal events.
-#[derive(Clone, Copy)]
+/// all possible events
+#[derive(Clone)]
 pub enum Event {
+    Quit,
     Tick,
+    FocusGained,
+    FocusLost,
+    Render,
+    Paste(String),
     Key(KeyEvent),
     Mouse(MouseEvent),
     Resize(u16, u16),
@@ -24,6 +29,11 @@ pub struct EventHandler {
 }
 
 impl EventHandler {
+    /// get a sender
+    pub fn get_sender(&self) -> mpsc::UnboundedSender<Event> {
+        self.sender.clone()
+    }
+
     /// Constructs a new instance of [`EventHandler`].
     pub fn new(tick_rate: u64) -> Self {
         let tick_rate = Duration::from_millis(tick_rate);
@@ -52,9 +62,7 @@ impl EventHandler {
                                     _sender.send(Event::Key(key)).unwrap();
                                 }
                             }
-                            CrosstermEvent::Mouse(mouse) => {
-                                _sender.send(Event::Mouse(mouse)).unwrap();
-                            }
+                            CrosstermEvent::Mouse(_mouse) => {}
                             CrosstermEvent::Resize(x, y) => {
                                 _sender.send(Event::Resize(x, y)).unwrap();
                             }
