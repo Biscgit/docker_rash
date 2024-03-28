@@ -1,5 +1,6 @@
 pub mod sidebar;
-mod background;
+pub mod background;
+pub mod page;
 
 use crossterm::event::KeyEvent;
 use ratatui::{Frame, layout::Rect};

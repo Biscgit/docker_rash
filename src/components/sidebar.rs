@@ -11,10 +11,8 @@ use crate::components::background::set_background;
 use crate::components::Component;
 use crate::event::Event;
 use crate::types::AppResult;
+use crate::components::background::{DARK_BACKGROUND, LIGHT_BACKGROUND};
 
-
-const LIGHT_BACKGROUND: Color = Color::Rgb(52, 52, 60);
-const DARK_BACKGROUND: Color = Color::Rgb(34, 34, 40);
 
 
 pub struct SideBar {
