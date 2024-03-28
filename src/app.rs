@@ -7,7 +7,7 @@ use crate::tui::Tui;
 use crate::event::Event;
 use crate::components::Component;
 use crate::types::AppResult;
-use crate::components::sidebar::SideBar;
+use crate::components::{page::Page, sidebar::SideBar};
 
 
 pub enum Action {
@@ -21,6 +21,8 @@ pub enum Action {
 
 pub struct App {
     sender: UnboundedSender<Event>,
+
+    page_widget: Page,
     sidebar_widget: SideBar,
 }
 
@@ -59,6 +61,7 @@ impl Component for App {
         Ok(Self {
             sender: sender.clone(),
             sidebar_widget: SideBar::new(sender.clone())?,
+            page_widget: Page::new(sender.clone())?,
         })
     }
 
@@ -74,12 +77,13 @@ impl Component for App {
     }
 
     fn render(&mut self, frame: &mut Frame, area: Rect) {
-        let main_layout = Layout::horizontal([
+        let layout = Layout::horizontal([
             Constraint::Length(21),
             Constraint::Min(20),
         ]).split(area);
 
-        self.sidebar_widget.render(frame, main_layout[0]);
+        self.sidebar_widget.render(frame, layout[0]);
+        self.page_widget.render(frame, layout[1])
     }
 }
 
